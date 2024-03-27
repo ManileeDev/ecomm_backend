@@ -21,9 +21,7 @@ app.use("/api", userRouter);
 app.use("/api", otpRouter);
 app.use("/api",cartRouter);
 app.use("/api", paymentRouter);
-// app.get("/test",requireSignIn,isAdmin,(req, res) => {
-//   res.send("Protected route");
-// });
+
 mongoose
   .connect(process.env.MONG_URL)
   .then(() => {
