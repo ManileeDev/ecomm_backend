@@ -10,6 +10,7 @@ const userRouter = require("./routes/userRoute");
 const otpRouter = require("./routes/Otp");
 const cartRouter = require("./routes/cart")
 const paymentRouter = require("./routes/payment")
+const ImageRouter = require("./routes/ImageUpload")
 const {requireSignIn, isAdmin} = require("./middlewares/authMiddleware");
 const morgan = require("morgan");
 app.use(express.json());
@@ -21,7 +22,7 @@ app.use("/api", userRouter);
 app.use("/api", otpRouter);
 app.use("/api",cartRouter);
 app.use("/api", paymentRouter);
-
+app.use("/api", ImageRouter)
 mongoose
   .connect(process.env.MONG_URL)
   .then(() => {

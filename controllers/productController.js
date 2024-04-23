@@ -15,9 +15,9 @@ const getProducts = async (req, res) => {
 
 //GET Single Product - /api/product/:id
 const getSingleProduct = async (req, res) => {
-  const karthi = req.params.id;
+  const prod = req.params.id;
   try {
-    const product = await ProductModel.findById({_id : karthi});
+    const product = await ProductModel.findById({_id : prod});
     res.json({
       status: "Success",
       product,

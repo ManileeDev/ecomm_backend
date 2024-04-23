@@ -1,28 +1,18 @@
-const jwt = require("jsonwebtoken")
-const userModel = require("../model/userModel")
-const requireSignIn = async (req,res,next) => {
-   try{
-       const decode = jwt.verify(req.headers.authorization,process.env.SECRET)
-       req.user = decode;
-       next()
-   }
-   catch(err){
-    console.log(err)
-   }
-}
+const jwt = require('jsonwebtoken');
 
-const isAdmin = async (req,res,next) => {
-    try {
-        const user = await userModel.findById(req.user.id);
-        if(user.role !== "admin"){
-            return res.status(400).send("Unauthorised Access")
-        }
-        else{
-            next()
-        }
-    } catch (error) {
-        console.log(error)
+const authMiddleware = (req,res,next)=>{
+    const {authorization} = req.headers;
+    
+    const token  = authorization.split(' ')[1]
+
+    try{
+        const {name} = jwt.verify(token,process.env.SECRET);
+        console.log(name)
+    }catch{
+
     }
+    
+    next();
 }
 
-module.exports = {requireSignIn,isAdmin};
+module.exports = {authMiddleware}
