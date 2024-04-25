@@ -4,7 +4,6 @@ const {createOrder, getOrder} = require("../controllers/orderController")
 const router = express.Router();
 
 
-router.use(authMiddleware);
 
 
 router.post("/create-order",createOrder)
