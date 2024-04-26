@@ -55,7 +55,8 @@ const loginUser = async (req,res) => {
             return res.status(404).json({message : "Password did not match"})
         }
         const token = createToken(user._id)
-        res.status(200).json({status: "Login Successful",user:{...user,token}})
+        // return res.status(200).json(user)
+        res.status(200).json({status: "Login Successful",user,token})
     }
     catch(e){
         res.status(400).json({err : e.message})
