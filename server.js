@@ -11,7 +11,7 @@ const otpRouter = require("./routes/Otp");
 const cartRouter = require("./routes/cart")
 const paymentRouter = require("./routes/payment")
 const ImageRouter = require("./routes/ImageUpload")
-const {requireSignIn, isAdmin} = require("./middlewares/authMiddleware");
+// const {requireSignIn, isAdmin} = require("./middlewares/authMiddleware");
 const morgan = require("morgan");
 app.use(express.json());
 app.use(cors());
@@ -23,6 +23,9 @@ app.use("/api", otpRouter);
 app.use("/api",cartRouter);
 app.use("/api", paymentRouter);
 app.use("/api", ImageRouter)
+app.get("/test",(req,res)=>{
+  res.send("HI da")
+})
 mongoose
   .connect(process.env.MONG_URL)
   .then(() => {
