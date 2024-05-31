@@ -36,7 +36,7 @@ const createProduct = async (req, res) => {
       status: "Success", product
     });
   } catch (err) {
-    res.status(400).json({ message: err.message });
+    res.status.json({message : err.message});
   }
 };
 
