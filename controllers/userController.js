@@ -84,6 +84,7 @@ const getAllUsers = async (req,res) => {
                 fullname : user.fullname,
                 email : user.email,
                 phone : user.phone,
+                userId : user._id
             }
         })
         res.status(200).json(result)
@@ -101,6 +102,9 @@ const deleteUser = async (req, res) => {
         const user = await userModel.findById(id)
         if(!user){
             return res.status(404).json({message : "User not found"})
+        }
+        if(user.role == "admin"){
+            return res.status(400).json({message : "Admin can not be deleted"})
         }
         await userModel.findByIdAndDelete(id)
         res.status(200).json({message : "User Deleted Successfully",user})
