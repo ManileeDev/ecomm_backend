@@ -2,6 +2,8 @@ const UserModel = require("../model/userModel")
 const bcrypt = require("bcrypt")
 const validator = require("validator");
 const userModel = require("../model/userModel");
+const nodemailer = require('nodemailer');
+
 const jwt = require("jsonwebtoken")
 
 const createToken = (id) => {
@@ -114,7 +116,65 @@ const deleteUser = async (req, res) => {
     }
 }
 
+const forgotPassword = async (req, res) => {
+    const { email } = req.body;
+    try {
+      const user = await UserModel.findOne({ email });
+      if (!user) {
+        return res.status(404).json({ message: "No user Found" });
+      }
+      const token = jwt.sign(user.email, process.env.SECRET)
+      const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+            user: process.env.mail,
+            pass: process.env.pass
+        },
+      });
+  
+      const mailOptions = {
+        from: 'donotreplyleemailer@gmail.com',
+        to: email,
+        subject: `Password Reset link for ${user.fullname}`,
+        text: `http://localhost:3001/resetpassword/${token}`,
+      };
+  
+      transporter.sendMail(mailOptions, function (error, info) {
+        if (error) {
+          console.log(error);
+        } else {
+          console.log("Email sent: " + info.response);
+        }
+      });
+      res
+        .status(200)
+        .json({status : "success",message: "Email has been sent to the registered mail" });
+    } catch (err) {
+      res.json({message: err.message});
+    }
+  };
+  
+  const resetPassword = async (req, res) => {
+    const { token } = req.params;
+    const { password } = req.body;
+    console.log(token,password)
+    try {
+      const  email = jwt.verify(token,process.env.SECRET);
+      const user = await UserModel.findOne({ email });
+      const match = await bcrypt.compare(password, user.password);
+      const hash = await bcrypt.hash(password, 10);
+  
+      if (match) {
+        return res.status(400).json({ message: "Password Already Exist" });
+      }
+  
+      await UserModel.findOneAndUpdate({ email }, { password: hash });
+      res.status(200).json({message: "password reset successfully",fullname : user.fullname});
+    } catch (err) {
+      res.json({err : err.message});
+    }
+  };
 
-module.exports = {createUser,loginUser,userAddress,getAllUsers,deleteUser}
+module.exports = {createUser,loginUser,userAddress,getAllUsers,deleteUser,forgotPassword,resetPassword}
 
 
