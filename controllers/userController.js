@@ -136,7 +136,7 @@ const forgotPassword = async (req, res) => {
         from: 'donotreplyleemailer@gmail.com',
         to: email,
         subject: `Password Reset link for ${user.fullname}`,
-        text: `http://localhost:3001/resetpassword/${token}`,
+        text: `https://leecart.netlify.app/resetpassword/${token}`,
       };
   
       transporter.sendMail(mailOptions, function (error, info) {
@@ -157,7 +157,6 @@ const forgotPassword = async (req, res) => {
   const resetPassword = async (req, res) => {
     const { token } = req.params;
     const { password } = req.body;
-    console.log(token,password)
     try {
       const  email = jwt.verify(token,process.env.SECRET);
       const user = await UserModel.findOne({ email });
